@@ -9,7 +9,6 @@ import CRMView from './components/CRMView';
 import KeyActivitiesView from './components/KeyActivitiesView';
 import InfrastructureView from './components/InfrastructureView';
 import RevenueView from './components/RevenueView';
-import ContentHub from './components/ContentHub';
 import ClinicalRecordsView from './components/ClinicalRecordsView';
 import SettingsView from './components/SettingsView';
 import ScheduleView from './components/ScheduleView';
@@ -54,88 +53,90 @@ const App: React.FC = () => {
     { id: 'dashboard', label: 'Painel Central', icon: <Icons.Dashboard /> },
     { id: 'schedule', label: 'Agenda (Google)', icon: <Icons.Schedule /> },
     { id: 'marketing-hub', label: 'Marketing Hub', icon: <Icons.Channels /> },
-    { id: 'operations-hub', label: 'Atividades & Workflow', icon: <Icons.Activities /> },
-    { id: 'sales-playbook', label: 'Manual de Vendas', icon: <Icons.ContentHub /> },
-    { id: 'pops-sops', label: 'POPs & SOPs', icon: <Icons.Settings /> },
-    { id: 'crm', label: 'Relacionamento (CRM)', icon: <Icons.CRM /> },
-    { id: 'client-journey', label: 'Jornada Cliente', icon: <Icons.Journey /> },
-    { id: 'revenue', label: 'Receitas & Catálogo', icon: <Icons.Revenue /> },
+    { id: 'operations-hub', label: 'Workflow', icon: <Icons.Activities /> },
+    { id: 'sales-playbook', label: 'Vendas', icon: <Icons.ContentHub /> },
+    { id: 'crm', label: 'CRM', icon: <Icons.CRM /> },
+    { id: 'client-journey', label: 'Jornada', icon: <Icons.Journey /> },
+    { id: 'revenue', label: 'Financeiro', icon: <Icons.Revenue /> },
     { id: 'patients', label: 'Pacientes', icon: <Icons.Patients /> },
-    { id: 'clinical-records', label: 'Prontuários & Docs', icon: <Icons.ClinicalRecords /> },
-    { id: 'infrastructure', label: 'Infraestrutura', icon: <Icons.Infrastructure /> },
+    { id: 'clinical-records', label: 'Prontuários', icon: <Icons.ClinicalRecords /> },
     { id: 'ai-assistant', label: 'Assistente IA', icon: <Icons.AI /> },
-    { id: 'settings', label: 'Configurações', icon: <Icons.Settings /> },
+    { id: 'settings', label: 'Ajustes', icon: <Icons.Settings /> },
   ];
 
   return (
-    <div className="flex h-screen bg-[#f8fafc] overflow-hidden">
-      <aside className="w-72 bg-white border-r border-slate-200 flex flex-col shadow-sm">
-        <div className="p-8 border-b border-slate-100 bg-gradient-to-r from-sky-500/5 to-transparent">
-          <div className="flex items-center gap-4">
-            <div className="w-16 h-16 bg-white rounded-[2rem] flex items-center justify-center p-1 shadow-2xl shadow-sky-100 border border-slate-50 relative group overflow-hidden">
-              <div className="absolute inset-0 bg-sky-500 opacity-0 group-hover:opacity-10 transition-opacity"></div>
-              <div className="text-sky-500 font-black text-3xl relative z-10">P</div>
-            </div>
-            <div>
-              <h1 className="font-black text-slate-800 text-xl leading-tight tracking-tighter">Prime</h1>
-              <p className="text-[10px] text-sky-500 font-black tracking-[0.2em] uppercase">Business OS</p>
-            </div>
+    <div className="flex h-screen w-full p-4 lg:p-6 gap-6 relative overflow-hidden">
+      {/* Floating Glass Sidebar */}
+      <aside className="w-20 lg:w-64 h-full glass rounded-[2.5rem] shadow-2xl flex flex-col items-center lg:items-stretch py-8 z-20">
+        <div className="px-4 lg:px-8 mb-10 flex items-center gap-4">
+          <div className="w-12 h-12 bg-sky-500 rounded-2xl flex items-center justify-center text-white font-black text-2xl shadow-lg shadow-sky-500/30">P</div>
+          <div className="hidden lg:block">
+            <h1 className="font-black text-slate-800 text-lg tracking-tighter leading-none">Prime</h1>
+            <p className="text-[9px] text-sky-500 font-black uppercase tracking-widest">Intelligence</p>
           </div>
         </div>
 
-        <nav className="flex-1 p-4 space-y-1 overflow-y-auto scrollbar-hide">
+        <nav className="flex-1 px-3 space-y-1 overflow-y-auto scrollbar-hide">
           {menuItems.map((item) => (
             <button 
               key={item.id}
               onClick={() => setCurrentView(item.id as ViewType)}
-              className={`w-full flex items-center gap-3.5 px-5 py-3 rounded-2xl transition-all duration-300 group ${
+              className={`w-full flex items-center justify-center lg:justify-start gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 group ${
                 currentView === item.id 
-                  ? 'bg-sky-500 text-white shadow-xl shadow-sky-100 translate-x-1' 
-                  : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800'
+                  ? 'bg-sky-500 text-white shadow-xl shadow-sky-500/20' 
+                  : 'text-slate-500 hover:bg-white/50 hover:text-slate-800'
               }`}
+              title={item.label}
             >
               <span className={`transition-transform duration-300 ${currentView === item.id ? 'scale-110' : 'group-hover:scale-110'}`}>
                 {item.icon}
               </span>
-              <span className="font-bold text-[13px] tracking-tight whitespace-nowrap">{item.label}</span>
+              <span className="hidden lg:block font-bold text-[13px] tracking-tight">{item.label}</span>
             </button>
           ))}
         </nav>
 
-        <div className="p-6 border-t border-slate-100 bg-slate-50/50">
-          <div className="flex items-center gap-3 p-3 rounded-2xl bg-white border border-slate-100 shadow-sm cursor-pointer hover:border-sky-200 transition-colors">
-            <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-sm font-black text-slate-500 border border-slate-200">AD</div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-black text-slate-800 truncate tracking-tight">Admin Prime</p>
-              <p className="text-[9px] text-slate-400 font-black uppercase tracking-widest">primeodontologia.com.br</p>
+        <div className="px-4 mt-6">
+          <button 
+            onClick={() => setCurrentView('settings')}
+            className="w-full flex items-center justify-center lg:justify-start gap-4 p-3 rounded-2xl bg-white/40 hover:bg-white/60 transition-colors border border-white/40"
+          >
+            <div className="w-8 h-8 rounded-full bg-slate-200 border border-white/50 flex items-center justify-center text-[10px] font-black">AD</div>
+            <div className="hidden lg:block text-left">
+              <p className="text-[11px] font-black text-slate-800 truncate">Admin Prime</p>
+              <p className="text-[8px] text-slate-400 font-black uppercase">v3.5</p>
             </div>
-          </div>
+          </button>
         </div>
       </aside>
 
-      <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        <header className="h-20 bg-white/80 backdrop-blur-md border-b border-slate-200 flex items-center justify-between px-10 z-10 sticky top-0">
+      {/* Main Content Area */}
+      <main className="flex-1 h-full flex flex-col min-w-0 z-10">
+        <header className="h-20 glass rounded-[2rem] shadow-xl flex items-center justify-between px-8 mb-6 border border-white/40">
           <div className="flex flex-col">
-            <h2 className="text-2xl font-black text-slate-800 tracking-tighter leading-none">
-              {menuItems.find(i => i.id === currentView)?.label}
+            <h2 className="text-xl lg:text-2xl font-black text-slate-800 tracking-tighter leading-none">
+              {menuItems.find(i => i.id === currentView)?.label || 'Omni Dashboard'}
             </h2>
-            <span className="text-[10px] font-black text-sky-500 uppercase tracking-widest mt-1">Prime Franchise Intelligence v3.5</span>
+            <div className="flex items-center gap-2 mt-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">Operational Node: Master-01</span>
+            </div>
           </div>
           <div className="flex items-center gap-6">
-            <div className="hidden sm:flex flex-col items-end">
-               <span className="text-[11px] font-black text-slate-400 uppercase tracking-widest">Unidade Master</span>
-               <span className="text-xs font-bold text-slate-600">{new Date().toLocaleDateString('pt-BR', { day: 'numeric', month: 'long' })}</span>
+            <div className="hidden md:flex flex-col items-end">
+               <span className="text-[10px] font-black text-sky-500 uppercase tracking-widest">Global Sync Active</span>
+               <span className="text-xs font-bold text-slate-600">{new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}</span>
             </div>
-            <div className="h-10 w-px bg-slate-200"></div>
-            <button className="relative w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-sky-50 hover:text-sky-500 transition-all">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
-              <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-rose-500 rounded-full border-2 border-white"></span>
+            <div className="h-10 w-px bg-slate-200/50"></div>
+            <button className="relative w-10 h-10 rounded-2xl bg-white/50 hover:bg-white transition-all flex items-center justify-center text-slate-500">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+              <span className="absolute top-2 right-2 w-2 h-2 bg-rose-500 rounded-full border-2 border-white"></span>
             </button>
           </div>
         </header>
 
-        <div className="flex-1 overflow-y-auto p-10 bg-[#f8fafc]">
-          <div className="max-w-7xl mx-auto">
+        <div className="flex-1 overflow-y-auto pr-2 scrollbar-hide">
+          <div className="animate-in fade-in zoom-in duration-500">
             {renderView()}
           </div>
         </div>
