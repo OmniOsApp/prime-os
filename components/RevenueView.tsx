@@ -1,0 +1,260 @@
+
+import React, { useState } from 'react';
+import { Product } from '../types';
+
+const RevenueView: React.FC = () => {
+  const [activeTab, setActiveTab] = useState<'catalog' | 'pricing' | 'projections'>('catalog');
+  const [openFaqId, setOpenFaqId] = useState<string | null>(null);
+
+  const products: Product[] = [
+    { 
+      id: '1', 
+      name: 'Avaliação + Limpeza Preventiva', 
+      category: 'Low Ticket', 
+      price: 150, 
+      description: 'Avaliação odontológica detalhada com tecnologia de diagnóstico Prime. Porta de entrada para novos pacientes.', 
+      indications: ['Check-up Anual', 'Limpeza', 'Avaliação Inicial'], 
+      goal: 'Volume & Confiança', 
+      cta: 'Agendar Check-up', 
+      upsellSuggestion: 'Clareamento Dental',
+      faq: [
+        { question: "Quanto tempo dura a consulta?", answer: "A nossa avaliação completa dura cerca de 60 minutos, garantindo um diagnóstico preciso e sem pressa." },
+        { question: "Dói fazer a limpeza?", answer: "Não. Utilizamos técnicas modernas e delicadas. Pacientes com sensibilidade extrema recebem cuidados específicos." },
+        { question: "O preço é fixo?", answer: "Sim, para o protocolo padrão de prevenção. Caso sejam necessários exames extras, informamos antes da execução." }
+      ]
+    },
+    { 
+      id: '2', 
+      name: 'Plano Preventivo Anual', 
+      category: 'Recorrente', 
+      price: 1200, 
+      description: 'Cobertura completa de prevenção por 12 meses. Fidelização e previsibilidade de caixa.', 
+      indications: ['Prevenção', 'Manutenção', 'Fidelidade'], 
+      goal: 'LTV & Recorrência', 
+      cta: 'Aderir ao Plano', 
+      upsellSuggestion: 'Invisalign',
+      faq: [
+        { question: "O que está incluso?", answer: "Consultas de retorno, limpezas periódicas e acompanhamento preventivo contínuo da saúde bucal." },
+        { question: "Posso cancelar?", answer: "Sim, o cancelamento pode ser feito a qualquer momento com aviso prévio de 30 dias." },
+        { question: "Vale para a família?", answer: "Temos condições especiais para planos familiares, consulte nossa recepção." }
+      ]
+    },
+    { 
+      id: '3', 
+      name: 'Clareamento Dental Moderno', 
+      category: 'Mid Ticket', 
+      price: 900, 
+      description: 'Tratamento estético de alto impacto visual e rápida conversão. Ponte entre saúde e estética.', 
+      indications: ['Estética', 'Autoestima', 'Sem Dor'], 
+      goal: 'Conversão & Desejo', 
+      cta: 'Quero Sorriso Branco', 
+      upsellSuggestion: 'Lentes de Porcelana',
+      faq: [
+        { question: "Causa sensibilidade?", answer: "Nosso gel utiliza uma fórmula de dessensibilização integrada para minimizar qualquer desconforto." },
+        { question: "Quanto tempo dura o resultado?", answer: "Com bons hábitos de higiene, o resultado pode durar de 1 a 2 anos." },
+        { question: "Quantas sessões são necessárias?", answer: "Geralmente de 2 a 3 sessões para atingir o branco ideal desejado." }
+      ]
+    },
+    { 
+      id: '4', 
+      name: 'Invisalign® Full Treatment', 
+      category: 'High Ticket', 
+      price: 15000, 
+      description: 'O alinhador mais avançado do mundo. Produto âncora da Prime Odontologia.', 
+      indications: ['Alinhamento', 'Conforto', 'Digital'], 
+      goal: 'Lucro & Status', 
+      cta: 'Avaliar Invisalign', 
+      upsellSuggestion: 'Clareamento Final',
+      faq: [
+        { question: "É realmente invisível?", answer: "Sim, os alinhadores são feitos de polímero transparente de alta tecnologia, quase imperceptíveis a olho nu." },
+        { question: "Dói usar os alinhadores?", answer: "Há um leve desconforto nos primeiros 2 dias de cada nova fase, indicando que a movimentação está ocorrendo." },
+        { question: "Posso comer qualquer coisa?", answer: "Sim! Como os alinhadores são removíveis, você os retira para comer e escovar os dentes." }
+      ]
+    },
+    { 
+      id: '5', 
+      name: 'Implante Dentário Unitário', 
+      category: 'High Ticket', 
+      price: 4500, 
+      description: 'Recuperação funcional e estética com tecnologia de ponta. Reabilitação definitiva.', 
+      indications: ['Saúde', 'Função', 'Autoestima'], 
+      goal: 'Reabilitação Premium', 
+      cta: 'Consultar Implante', 
+      upsellSuggestion: 'Coroa de Porcelana',
+      faq: [
+        { question: "A cirurgia é segura?", answer: "Sim. Utilizamos tecnologia de planejamento digital e materiais biocompatíveis de última geração." },
+        { question: "Quanto tempo leva a recuperação?", answer: "O repouso inicial é de 48h a 72h. A cicatrização total do osso leva de 3 a 6 meses." },
+        { question: "O corpo pode rejeitar?", answer: "A taxa de sucesso é superior a 98% devido ao uso de titânio, que se integra perfeitamente ao osso." }
+      ]
+    },
+  ];
+
+  const pricingMaster = [
+    { treatment: 'Invisalign (Simples)', min: 10000, max: 15000, category: 'High' },
+    { treatment: 'Invisalign (Complexo)', min: 15000, max: 25000, category: 'High' },
+    { treatment: 'Lentes Porcelana (Dente)', min: 2500, max: 4500, category: 'High' },
+    { treatment: 'Clareamento Dental', min: 900, max: 2500, category: 'Mid' },
+    { treatment: 'Limpeza Profissional', min: 180, max: 350, category: 'Low' },
+  ];
+
+  const handleWhatsAppAction = (action: string, productName: string) => {
+    const message = `Olá, gostaria de ${action} para o tratamento: ${productName}`;
+    const url = `https://wa.me/?text=${encodeURIComponent(message)}`;
+    window.open(url, '_blank');
+  };
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+    alert('Resposta Prime copiada!');
+  };
+
+  return (
+    <div className="space-y-12 pb-20">
+      <div className="flex bg-white p-2 rounded-3xl border border-slate-100 shadow-sm gap-2">
+        {(['catalog', 'pricing', 'projections'] as const).map(tab => (
+          <button 
+            key={tab}
+            onClick={() => setActiveTab(tab)}
+            className={`flex-1 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all ${
+              activeTab === tab ? 'bg-slate-900 text-white shadow-xl' : 'text-slate-400 hover:bg-slate-50'
+            }`}
+          >
+            {tab === 'catalog' ? 'Catálogo de Ofertas' : tab === 'pricing' ? 'Precificação Master' : 'Projeções de Caixa'}
+          </button>
+        ))}
+      </div>
+
+      {activeTab === 'catalog' && (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {products.map(p => (
+            <div key={p.id} className="bg-white p-10 rounded-[4rem] border border-slate-100 shadow-sm flex flex-col group hover:shadow-2xl transition-all relative overflow-hidden">
+               <div className={`absolute top-0 right-0 w-32 h-32 rounded-full -mr-16 -mt-16 opacity-10 transition-transform group-hover:scale-125 ${
+                 p.category === 'High Ticket' ? 'bg-amber-400' : p.category === 'Mid Ticket' ? 'bg-sky-400' : 'bg-emerald-400'
+               }`}></div>
+               <div className="flex justify-between items-start mb-10">
+                  <span className={`px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest ${
+                    p.category === 'High Ticket' ? 'bg-amber-50 text-amber-600' : 
+                    p.category === 'Mid Ticket' ? 'bg-sky-50 text-sky-600' : 'bg-emerald-50 text-emerald-600'
+                  }`}>
+                    {p.category}
+                  </span>
+                  <span className="text-2xl group-hover:rotate-12 transition-transform">🦷</span>
+               </div>
+               <h4 className="text-2xl font-black text-slate-800 tracking-tighter mb-4 leading-none h-14">{p.name}</h4>
+               <p className="text-xs text-slate-500 font-medium leading-relaxed mb-8 flex-1 italic">"{p.description}"</p>
+               
+               <div className="space-y-6">
+                 {/* FAQ Section */}
+                 {p.faq && (
+                    <div className="border-t border-slate-50 pt-4">
+                      <button 
+                        onClick={() => setOpenFaqId(openFaqId === p.id ? null : p.id)}
+                        className="flex items-center gap-2 text-[10px] font-black uppercase text-sky-500 tracking-widest hover:text-sky-600 transition-all mb-2"
+                      >
+                        <span className={`transition-transform duration-300 ${openFaqId === p.id ? 'rotate-180' : ''}`}>▼</span>
+                        Dúvidas Frequentes (FAQ)
+                      </button>
+                      
+                      {openFaqId === p.id && (
+                        <div className="space-y-4 mt-4 animate-in fade-in slide-in-from-top-2 duration-300">
+                          {p.faq.map((item, idx) => (
+                            <div key={idx} className="space-y-1 group/faq relative">
+                              <p className="text-[11px] font-black text-slate-800 leading-tight">
+                                <span className="text-sky-500 mr-1 italic">Q:</span> {item.question}
+                              </p>
+                              <p className="text-[11px] text-slate-500 font-medium italic leading-relaxed pr-8">
+                                {item.answer}
+                              </p>
+                              <button 
+                                onClick={() => copyToClipboard(item.answer)}
+                                className="absolute top-0 right-0 p-1 opacity-0 group-hover/faq:opacity-100 transition-opacity text-sky-400 hover:text-sky-600"
+                                title="Copiar Resposta"
+                              >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                 )}
+
+                 <div className="grid grid-cols-2 gap-4">
+                   <div className="bg-slate-50 p-4 rounded-2xl">
+                     <p className="text-[9px] font-black text-slate-400 uppercase mb-1">Valor Sugerido</p>
+                     <p className="text-xl font-black text-slate-800">R$ {p.price.toLocaleString()}</p>
+                   </div>
+                   <div className="bg-slate-50 p-4 rounded-2xl">
+                     <p className="text-[9px] font-black text-slate-400 uppercase mb-1">Próximo Passo</p>
+                     <p className="text-[10px] font-black text-sky-500 uppercase">{p.upsellSuggestion}</p>
+                   </div>
+                 </div>
+                 
+                 <div className="flex flex-col gap-2">
+                    <button 
+                      onClick={() => handleWhatsAppAction('iniciar o agendamento', p.name)}
+                      className="w-full py-4 bg-slate-900 text-white rounded-2xl font-black text-[11px] uppercase tracking-widest hover:bg-sky-500 transition-all shadow-lg shadow-black/5"
+                    >
+                      Vender no WhatsApp
+                    </button>
+                    {p.name === 'Avaliação + Limpeza Preventiva' && (
+                      <button 
+                        onClick={() => handleWhatsAppAction('consultar o preço exato', p.name)}
+                        className="w-full py-4 bg-white border border-slate-200 text-slate-800 rounded-2xl font-black text-[11px] uppercase tracking-widest hover:bg-slate-50 transition-all shadow-sm"
+                      >
+                        Consultar Preço
+                      </button>
+                    )}
+                 </div>
+               </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {activeTab === 'pricing' && (
+        <div className="bg-white rounded-[3.5rem] border border-slate-100 shadow-sm overflow-hidden">
+          <table className="w-full text-left">
+            <thead className="bg-slate-50">
+              <tr>
+                <th className="px-10 py-8 text-[10px] font-black text-slate-400 uppercase tracking-widest">Tratamento / Serviço</th>
+                <th className="px-10 py-8 text-[10px] font-black text-slate-400 uppercase tracking-widest">Categoria</th>
+                <th className="px-10 py-8 text-[10px] font-black text-slate-400 uppercase tracking-widest">Preço Mínimo</th>
+                <th className="px-10 py-8 text-[10px] font-black text-slate-400 uppercase tracking-widest">Preço Máximo</th>
+                <th className="px-10 py-8 text-[10px] font-black text-slate-400 uppercase tracking-widest">Status Franquia</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-50">
+              {pricingMaster.map((p, i) => (
+                <tr key={i} className="hover:bg-slate-50 transition-colors">
+                  <td className="px-10 py-6 font-black text-slate-800">{p.treatment}</td>
+                  <td className="px-10 py-6">
+                    <span className={`text-[10px] font-black uppercase ${p.category === 'High' ? 'text-amber-500' : 'text-sky-500'}`}>{p.category}</span>
+                  </td>
+                  <td className="px-10 py-6 font-bold text-slate-700">R$ {p.min.toLocaleString()}</td>
+                  <td className="px-10 py-6 font-bold text-slate-700">R$ {p.max.toLocaleString()}</td>
+                  <td className="px-10 py-6">
+                    <span className="px-3 py-1 bg-emerald-50 text-emerald-600 rounded-full text-[9px] font-black uppercase">PADRÃO PRIME</span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {activeTab === 'projections' && (
+        <div className="bg-slate-900 p-16 rounded-[4rem] text-white text-center space-y-8 shadow-3xl">
+           <div className="w-24 h-24 bg-white/10 rounded-[2rem] flex items-center justify-center text-4xl mx-auto border border-white/10">📈</div>
+           <h3 className="text-4xl font-black tracking-tighter leading-none">Simulador de Faturamento</h3>
+           <p className="text-slate-400 max-w-xl mx-auto font-medium italic">"Calcule sua receita mensal baseada na escada de valor. Combine volume Low Ticket com margem High Ticket para lucratividade máxima."</p>
+           <button className="px-12 py-5 bg-sky-500 text-white rounded-3xl font-black text-xs uppercase tracking-widest hover:scale-105 transition-all shadow-2xl shadow-sky-500/20">
+             Abrir Calculadora Revenue
+           </button>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default RevenueView;
